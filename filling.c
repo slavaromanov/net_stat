@@ -45,7 +45,7 @@ int set_field() {
 int set_extip() {
   struct hostent *hp;
   struct sockaddr_in addr;
-  int sock, on = 1;
+  int sock, on = 1, i;
   const char *host = "icanhazip.com";
   in_port_t port = 80;
   if ((hp = gethostbyname(host)) == NULL) {
@@ -65,12 +65,13 @@ int set_extip() {
     perror("connect");
     exit(EXIT_FAILURE);
   }
-  char ip[IP_LEN];
+  char msg[IP_LEN];
   write(sock, "GET /\r\n", strlen("GET /\r\n"));
-  while (read(sock, ip, IP_LEN-1) != 0) {
-    memcpy(ifc.ext_ip, ip, IP_LEN-2);
+  while (read(sock, msg, IP_LEN-2) != 0) {
+    memcpy(ifc.ext_ip, msg, strlen(msg));
   }
   shutdown(sock, SHUT_RDWR);
+  ifc.ext_ip[0] = '\b';
   close(sock);
   return 1;
 }

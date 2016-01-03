@@ -21,7 +21,7 @@ int data_to_screen() {
   printf(" _______________________________________________________\n"
           "|name:\t\t     %5s|MTU: %4d\t\t\t|\n"
           "|network ip:%15s|network mask:%15s|\n"
-          "|extern ip: %15s|MAC:       %17s|\n",
+          "|extern ip: %17s|MAC:       %17s|\n",
                                     ifc.name, ifc.mtu, ifc.ip, ifc.mask,
                                     ifc.ext_ip, ifc.mac);
 }
@@ -38,7 +38,7 @@ int ldata_to_screen() {
     if (ifa->ifa_addr == NULL)
       continue;
     family = ifa->ifa_addr->sa_family;
-    if (family == AF_PACKET && ifa->ifa_data != NULL) {
+    if (family == AF_PACKET && ifa->ifa_data != NULL && strcmp(ifa->ifa_name, ifc.name) == 0) {
       struct rtnl_link_stats *s = ifa->ifa_data;
       sprintf(tmp, "|_______________________________________________________|\n"
       "|\t        transmitted|    received\t\t|\n"
